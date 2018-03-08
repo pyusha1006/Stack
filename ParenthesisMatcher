@@ -1,0 +1,80 @@
+package com.practice.pyusha.arrays;
+
+import java.util.Stack;
+
+public class ParenthesisMatcher {
+	public static void main(String[] args) {
+		//String input = "This {is(an) error} scenario as there is [extra opening brace(";
+		//String input = "This({is not [(an)] error} scenario) [extra opening brace]";
+		//String input = "This {is(an) error} scenario (as there is [)extra opening brace()]";
+		//String input = "This {is(an) error} scenario )as there is [extra opening brace()]";
+		String input = "{his @ is an error scenario as there is extra opening brace}";
+		int pos = 1;
+		System.out.println(parenthesisMatcher(input,pos));
+	}
+	
+	static int parenthesisMatcher(String input,int pos){                                  //Time Complexity: O(n)
+		Stack<Character> st = new Stack<>();                                                //Space Complexity: O(n)
+		int output = 0;
+		char temp_char = 0;
+		int curr_count_parenthesis = 0; //incr this pntr whenever you encounter an opening brace
+		int count_keeper = 0;
+		if(input.equals("") || input.equals(null) || input.length()<pos)
+			return -1;
+		
+		for(int i = 0 ;i<input.length();i++){
+			char ch1 = input.charAt(i);
+			if(!Character.isLetterOrDigit(ch1) && (ch1 =='('  || ch1 == '{' || ch1 == '[')){
+				curr_count_parenthesis++;
+				count_keeper++;
+				st.push(ch1);
+				if(count_keeper == pos){
+					temp_char = ch1;
+				}
+			}
+			else if(!Character.isLetterOrDigit(ch1) && (ch1 ==')'  || ch1 == '}' || ch1 == ']')){
+				if(!st.isEmpty() && isMatchingPair(st.peek(),ch1)){
+					st.pop();
+					curr_count_parenthesis--;
+					if(count_keeper == pos && ch1 == getMatchingPair(temp_char)){
+						output = i;
+					}
+					else if(count_keeper == pos && ch1 == getMatchingPair(temp_char))
+						return -1;
+				}
+				else
+					return -1;
+			}
+		}
+		
+		if(curr_count_parenthesis != 0 || pos>count_keeper)
+			return -1;
+		return output;
+	}
+	
+	static boolean isMatchingPair(char character1, char character2)
+    {
+       if (character1 == '(' && character2 == ')')
+         return true;
+       else if (character1 == '{' && character2 == '}')
+         return true;
+       else if (character1 == '[' && character2 == ']')
+         return true;
+       else
+         return false;
+    }
+	
+	static char getMatchingPair(char character1)
+    {
+       if (character1 == '(')
+         return ')';
+       else if (character1 == '{' )
+         return '}';
+       else if (character1 == '[')
+         return ']';
+       else
+    	   return 'n';
+     
+    }
+
+}
